@@ -12,9 +12,9 @@ public class Sword : MonoBehaviour, IItem
 
             if (gun != null)
             {
-                gun.damageMultiplier *= 2; // 총 자체의 데미지 배율을 2배로 증가 
-                Debug.Log("공격력: " + (gun.gunData.damage * gun.damageMultiplier));
+                gun.damageMultiplier *= 2; // 총 자체의 데미지 배율을 2배로 증가 (영구 수정 방지)
             }
+
         }
         Destroy(gameObject); // 아이템 사용 후 자신을 파괴
     }

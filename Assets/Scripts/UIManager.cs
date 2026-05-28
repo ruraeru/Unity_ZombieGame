@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement; // 씬 관리자 관련 코드
 using UnityEngine.UI; // UI 관련 코드
 
@@ -29,6 +30,7 @@ public class UIManager : MonoBehaviour
     public Text comboText; // 콤보 표시용 텍스트 (새로 추가)
     public Text healthText; // 체력 표시용 텍스트 (새로 추가)
     public Text damageText; // 공격력 표시용 텍스트 (새로 추가)
+    public CanvasGroup screenFadeGroup; // 화면 페이드 효과용 캔버스 그룹
 
     private void Start()
     {
@@ -124,6 +126,31 @@ public class UIManager : MonoBehaviour
     // 게임 재시작
     public void GameRestart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene("Intro");
+    }
+
+    // 화면을 서서히 어둡게 만드는 코루틴
+    public IEnumerator DrawFadeScreen()
+    {
+        if (screenFadeGroup == null)
+        {
+            yield break;
+        }
+
+        float fadeDuration = 5f; // 5초 동안 아주 천천히 페이드
+        float timer = 0f;
+
+        // 페이드 시작 시 활성화 (투명한 상태로 시작)
+        screenFadeGroup.gameObject.SetActive(true);
+        screenFadeGroup.alpha = 0f;
+
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            screenFadeGroup.alpha = timer / fadeDuration;
+            yield return null;
+        }
+
+        screenFadeGroup.alpha = 1f;
     }
 }

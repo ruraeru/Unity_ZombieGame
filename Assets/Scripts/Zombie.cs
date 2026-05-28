@@ -117,6 +117,12 @@ public class Zombie : LivingEntity
         }
     }
 
+    // 추적할 대상을 외부에서 설정할 수 있는 메서드
+    public void SetTarget(LivingEntity target)
+    {
+        targetEntity = target;
+    }
+
     // 주기적으로 추적할 대상의 위치를 찾아 경로 갱신
     private IEnumerator UpdatePath()
     {
@@ -140,12 +146,24 @@ public class Zombie : LivingEntity
             }
             else
             {
-                //추적 대상 존재하지 않음 : AI 이동 멈춤
-                navMeshAgent.isStopped = true;
+                // 추적 대상 존재하지 않음 : 주변 배회
+                navMeshAgent.isStopped = false;
 
-                //20 유닛 반지름을 가진 가상의 구를 그렸을 때 구와 겹치는 모든 콜라이더를 가져옴
-                //단, whatIsTarget 레이어에 해당하는 콜라이더만 가져오도록 필터링
-                Collider[] colliders = Physics.OverlapSphere(transform.position, 20f, whatIsTarget);
+                // 목적지에 거의 도착했거나 목적지가 없는 경우에만 새로운 목적지 설정
+                if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+                {
+                    // 50 유닛 범위의 먼 곳으로 목적지 설정 (막 뛰어다니는 느낌)
+                    Vector3 randomDir = Random.insideUnitSphere * 50f;
+                    randomDir += transform.position;
+                    NavMeshHit hit;
+                    if (NavMesh.SamplePosition(randomDir, out hit, 50f, NavMesh.AllAreas))
+                    {
+                        navMeshAgent.SetDestination(hit.position);
+                    }
+                }
+
+                // 주변에 타겟이 있는지 탐색 (반지름을 100으로 대폭 증가)
+                Collider[] colliders = Physics.OverlapSphere(transform.position, 100f, whatIsTarget);
 
                 //모든 콜라이더를 순회하면서 살아 있는 LivingEntity 컴포넌트를 가진 게임 오브젝트가 있는지 확인
                 for (int i = 0; i < colliders.Length; i++)

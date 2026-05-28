@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement; // 씬 전환을 위해 추가
 
 // 좀비 게임 오브젝트를 주기적으로 생성
 public class ZombieSpawner : MonoBehaviour
@@ -29,11 +31,34 @@ public class ZombieSpawner : MonoBehaviour
         // 좀비를 모두 물리친 경우 다음 스폰 실행
         if (zombies.Count <= 0)
         {
-            SpawnWave();
+            // 만약 5웨이브까지 모두 클리어했다면 (다음 웨이브가 6이 되려고 할 때)
+            if (wave == 2)
+            {
+                // 게임 클리어 루틴 시작 (한 번만 실행되도록 wave를 임의로 올림)
+                wave++;
+                StartCoroutine(GameClearRoutine());
+            }
+            else if (wave < 5)
+            {
+                SpawnWave();
+            }
         }
 
         // UI 갱신
         UpdateUI();
+    }
+
+    // 게임 클리어 시 페이드 효과와 함께 씬 전환
+    private IEnumerator GameClearRoutine()
+    {
+        // UI 매니저를 통해 화면을 서서히 어둡게 함
+        if (UIManager.instance != null)
+        {
+            yield return StartCoroutine(UIManager.instance.DrawFadeScreen());
+        }
+
+        // 페이드가 끝나면 엔딩 씬으로 이동
+        SceneManager.LoadScene("Ending");
     }
 
     // 웨이브 정보를 UI로 표시

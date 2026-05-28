@@ -22,7 +22,7 @@ public class MachineGun : MonoBehaviour, IItem
                 // 새 머신건 인스턴스화
                 Gun newGun = Instantiate(GameManager.instance.machineGun, gunPivot);
                 newGun.transform.localPosition = localPos;
-                
+
                 // M249 모델이 반대를 향하고 있으므로 Y축으로 180도 회전시켜 정면을 보게 합니다.
                 // localRot을 곱하는 대신 명확하게 180도 값을 설정합니다.
                 newGun.transform.localRotation = Quaternion.Euler(0, 180f, 0);
@@ -35,8 +35,10 @@ public class MachineGun : MonoBehaviour, IItem
 
                 // 장착된 무기가 다시 아이템으로 취급되지 않도록 충돌체와 스크립트 제거
                 Collider col = newGun.GetComponent<Collider>();
+                Rotator rotator = newGun.GetComponent<Rotator>();
+                if (rotator != null) Destroy(rotator);
                 if (col != null) col.enabled = false;
-                
+
                 MachineGun pickupScript = newGun.GetComponent<MachineGun>();
                 if (pickupScript != null) Destroy(pickupScript);
 

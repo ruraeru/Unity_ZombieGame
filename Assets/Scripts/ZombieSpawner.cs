@@ -16,6 +16,7 @@ public class ZombieSpawner : MonoBehaviour
 
     public ZombieType[] zombieTypes; // 생성 가능한 좀비 종류들
     public Transform[] spawnPoints; // 좀비 AI를 소환할 위치들
+    public int maxWaves = 5; // 최대 웨이브 수 (게임 클리어 조건)
 
     private List<Zombie> zombies = new List<Zombie>(); // 생성된 좀비들을 담는 리스트
     private int wave; // 현재 웨이브
@@ -32,13 +33,13 @@ public class ZombieSpawner : MonoBehaviour
         if (zombies.Count <= 0)
         {
             // 만약 5웨이브까지 모두 클리어했다면 (다음 웨이브가 6이 되려고 할 때)
-            if (wave == 2)
+            if (wave == maxWaves)
             {
                 // 게임 클리어 루틴 시작 (한 번만 실행되도록 wave를 임의로 올림)
                 wave++;
                 StartCoroutine(GameClearRoutine());
             }
-            else if (wave < 5)
+            else if (wave < maxWaves)
             {
                 SpawnWave();
             }

@@ -40,9 +40,9 @@ public class PlayerMovement : MonoBehaviour
     // 콤보에 따른 버프 처리
     private void HandleComboBuff(int combo)
     {
-        if (combo >= 10)
+        if (combo >= 5)
         {
-            moveSpeed = originalMoveSpeed * 1.5f; // 10콤보 이상이면 속도 1.5배
+            moveSpeed = originalMoveSpeed * 1.5f; // 5콤보 이상이면 속도 1.5배
         }
     }
 

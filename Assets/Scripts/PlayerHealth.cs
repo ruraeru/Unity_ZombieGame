@@ -16,6 +16,8 @@ public class PlayerHealth : LivingEntity
     private PlayerMovement playerMovement; // 플레이어 움직임 컴포넌트
     private PlayerShooter playerShooter; // 플레이어 슈터 컴포넌트
 
+    public bool isInvincible = false; // 무적 상태 여부 (추가)
+
     private void Awake()
     {
         // 사용할 컴포넌트를 가져오기
@@ -24,6 +26,37 @@ public class PlayerHealth : LivingEntity
 
         playerMovement = GetComponent<PlayerMovement>();
         playerShooter = GetComponent<PlayerShooter>();
+
+        // 콤보 이벤트 구독 (무적 버프용)
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.onComboChanged += HandleComboBuff;
+            GameManager.instance.onComboReset += ResetBuff;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // 이벤트 구독 해제
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.onComboChanged -= HandleComboBuff;
+            GameManager.instance.onComboReset -= ResetBuff;
+        }
+    }
+
+    // 콤보에 따른 무적 버프 처리
+    private void HandleComboBuff(int combo)
+    {
+        if (combo >= 25)
+        {
+            isInvincible = true; // 25콤보 이상 무적
+        }
+    }
+
+    private void ResetBuff()
+    {
+        isInvincible = false;
     }
 
     protected override void OnEnable()
@@ -63,6 +96,8 @@ public class PlayerHealth : LivingEntity
     // 데미지 처리
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitDirection)
     {
+        if (isInvincible) return; // 무적 상태라면 데미지 무시
+
         if (!dead)
         {
             playerAudioPlayer.PlayOneShot(hitClip); // 피격 소리 재생

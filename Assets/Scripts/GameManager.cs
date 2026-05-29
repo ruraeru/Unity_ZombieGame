@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 // 점수와 게임 오버 여부를 관리하는 게임 매니저
 public class GameManager : MonoBehaviour
@@ -30,8 +31,8 @@ public class GameManager : MonoBehaviour
     public int currentCombo { get; private set; } // 현재 콤보 수
     public float comboTimer { get; private set; } // 콤보 유지 타이머
     public float comboDuration = 3f; // 콤보 유지 시간 (3초)
-    public event System.Action<int> onComboChanged; // 콤보 변경 시 발생할 이벤트
-    public event System.Action onComboReset; // 콤보 초기화 시 발생할 이벤트
+    public event Action<int> onComboChanged; // 콤보 변경 시 발생할 이벤트
+    public event Action onComboReset; // 콤보 초기화 시 발생할 이벤트
 
     private void Awake()
     {

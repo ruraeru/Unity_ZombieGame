@@ -215,6 +215,16 @@ public class Zombie : LivingEntity
         if (GameManager.instance != null)
         {
             GameManager.instance.AddCombo();
+
+            // 20콤보 이상일 때 처치 시 체력 회복 (흡혈 버프)
+            if (GameManager.instance.currentCombo >= 20)
+            {
+                PlayerHealth player = targetEntity as PlayerHealth;
+                if (player != null)
+                {
+                    player.RestoreHealth(5f); // 체력 5 회복
+                }
+            }
         }
 
         //다른 AI를 방해하지 않도록 자신의 모든 콜라이더를 비활성화

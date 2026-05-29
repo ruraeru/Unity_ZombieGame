@@ -53,9 +53,12 @@ public class UIManager : MonoBehaviour
         comboText.gameObject.SetActive(true);
         string message = combo + " COMBO!";
 
-        // 버프 단계별 메시지 추가
-        if (combo >= 20) message += "\n<color=red>BERSERKER!</color>";
-        else if (combo >= 10) message += "\n<color=cyan>ADRENALINE!</color>";
+        // 버프 단계별 메시지 추가 (5배수)
+        if (combo >= 25) message += "\n<color=yellow>GOD MODE!</color>";
+        else if (combo >= 20) message += "\n<color=red>VAMPIRISM!</color>";
+        else if (combo >= 15) message += "\n<color=orange>POWER UP!</color>";
+        else if (combo >= 10) message += "\n<color=red>BERSERKER!</color>";
+        else if (combo >= 5) message += "\n<color=cyan>ADRENALINE!</color>";
 
         comboText.text = message;
     }

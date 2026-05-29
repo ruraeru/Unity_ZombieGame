@@ -37,6 +37,7 @@ public class Gun : MonoBehaviour
 
     public float fireRateMultiplier = 1f; // 발사 속도 배율 (콤보 버프용)
     public float damageMultiplier = 1f; // 데미지 배율 (아이템 버프용)
+    public float comboDamageMultiplier = 1f; // 콤보 데미지 배율 (추가)
 
     private void Awake()
     {

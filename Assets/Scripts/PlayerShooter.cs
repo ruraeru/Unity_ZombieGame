@@ -39,9 +39,10 @@ public class PlayerShooter : MonoBehaviour
     // 콤보에 따른 버프 처리
     private void HandleComboBuff(int combo)
     {
-        if (gun != null && combo >= 20)
+        if (gun != null)
         {
-            gun.fireRateMultiplier = 0.5f; // 20콤보 이상이면 연사 속도 2배 (간격 0.5배)
+            if (combo >= 15) gun.comboDamageMultiplier = 2.0f; // 15콤보 이상 공격력 2배
+            if (combo >= 10) gun.fireRateMultiplier = 0.5f; // 10콤보 이상 연사 속도 2배
         }
     }
 
@@ -51,6 +52,7 @@ public class PlayerShooter : MonoBehaviour
         if (gun != null)
         {
             gun.fireRateMultiplier = 1.0f;
+            gun.comboDamageMultiplier = 1.0f;
         }
     }
 

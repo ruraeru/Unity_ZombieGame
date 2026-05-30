@@ -31,6 +31,7 @@ public class UIManager : MonoBehaviour
     public Text healthText; // 체력 표시용 텍스트 (새로 추가)
     public Text damageText; // 공격력 표시용 텍스트 (새로 추가)
     public CanvasGroup screenFadeGroup; // 화면 페이드 효과용 캔버스 그룹
+    public Text skillCooldownText; // 스킬 쿨타임 표시용 텍스트 (새로 추가)
 
     private void Start()
     {
@@ -87,6 +88,23 @@ public class UIManager : MonoBehaviour
         if (damageText != null)
         {
             damageText.text = "DMG : " + damage;
+        }
+    }
+
+    // 스킬 UI 갱신
+    public void UpdateSkillUI(float cooldownRemaining)
+    {
+        if (skillCooldownText == null) return;
+
+        if (cooldownRemaining > 0)
+        {
+            skillCooldownText.text = "Q : " + cooldownRemaining.ToString("F1") + "s";
+            skillCooldownText.color = Color.red;
+        }
+        else
+        {
+            skillCooldownText.text = "Q : READY";
+            skillCooldownText.color = Color.cyan;
         }
     }
 

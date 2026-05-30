@@ -75,7 +75,7 @@ public class ZombieSpawner : MonoBehaviour
         wave++; // 웨이브 증가
 
         //현재 웨이브 * 1.5에 반올림한 개수만큼 좀비 생성
-        int spawnCount = Mathf.RoundToInt(wave * 1.5f);
+        int spawnCount = Mathf.RoundToInt(wave * 5f);
 
         // spawnCount만큼 좀비 생성
         for (int i = 0; i < spawnCount; i++)

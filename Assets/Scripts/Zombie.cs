@@ -205,6 +205,38 @@ public class Zombie : LivingEntity
         base.OnDamage(damage, hitPoint, hitNormal);
     }
 
+    // 넉백 적용
+    public void ApplyKnockback(Vector3 direction, float force)
+    {
+        if (!dead)
+        {
+            StartCoroutine(KnockbackRoutine(direction, force));
+        }
+    }
+
+    private IEnumerator KnockbackRoutine(Vector3 direction, float force)
+    {
+        float duration = 0.3f; // 넉백 지속 시간
+        float timer = 0f;
+
+        // 내비게이션 일시 중지
+        navMeshAgent.enabled = false;
+
+        while (timer < duration)
+        {
+            // 방향과 힘에 따라 위치 강제 이동
+            transform.Translate(direction * force * Time.deltaTime, Space.World);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        // 내비게이션 복구 (사망하지 않았을 때만)
+        if (!dead)
+        {
+            navMeshAgent.enabled = true;
+        }
+    }
+
     // 사망 처리
     public override void Die()
     {

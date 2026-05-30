@@ -4,7 +4,8 @@
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f; // 앞뒤 움직임의 속도
-    private float originalMoveSpeed; // 원래 이동 속도 저장
+    public float sprintMultiplier = 1.5f; // 달리기 배율 (추가)
+    private float comboMultiplier = 1f; // 콤보 배율 저장용
 
     private PlayerInput playerInput; // 플레이어 입력을 알려주는 컴포넌트
     private Rigidbody playerRigidbody; // 플레이어 캐릭터의 리지드바디
@@ -16,8 +17,6 @@ public class PlayerMovement : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         playerRigidbody = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
-
-        originalMoveSpeed = moveSpeed;
 
         // 콤보 이벤트 구독
         if (GameManager.instance != null)
@@ -42,14 +41,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (combo >= 5)
         {
-            moveSpeed = originalMoveSpeed * 1.5f; // 5콤보 이상이면 속도 1.5배
+            comboMultiplier = 1.5f; // 5콤보 이상이면 속도 1.5배
         }
     }
 
     // 버프 초기화
     private void ResetBuff()
     {
-        moveSpeed = originalMoveSpeed;
+        comboMultiplier = 1f;
     }
 
     // FixedUpdate는 물리 갱신 주기에 맞춰 실행됨 0.02초마다 한 번씩 실행됨
@@ -60,14 +59,27 @@ public class PlayerMovement : MonoBehaviour
         Move();
 
         // 입력값에 따라 애니메이터의 Move 파리미터값 변경
-        playerAnimator.SetFloat("Move", playerInput.Move);
+        // 달리기를 하는 중이면 애니메이션 속도도 빠르게 보이게 함
+        float moveInput = playerInput.Move;
+        if (playerInput.Sprint && moveInput > 0) moveInput *= sprintMultiplier;
+
+        playerAnimator.SetFloat("Move", moveInput);
     }
 
     // 입력값에 따라 캐릭터를 앞뒤로 움직임
     private void Move()
     {
+        // 최종 속도 계산 (기본 속도 * 콤보 배율 * 달리기 배율)
+        float currentSpeed = moveSpeed * comboMultiplier;
+
+        // 앞으로 이동 중일 때만 달리기 적용 (뒷걸음질 방지)
+        if (playerInput.Sprint && playerInput.Move > 0)
+        {
+            currentSpeed *= sprintMultiplier;
+        }
+
         //상대적으로 이동할 거리 계산
-        Vector3 moveDistance = playerInput.Move * transform.forward * moveSpeed * Time.deltaTime;
+        Vector3 moveDistance = playerInput.Move * transform.forward * currentSpeed * Time.deltaTime;
 
         //리지드바디를 이용해 게임 오브젝트 위치 변경
         playerRigidbody.MovePosition(playerRigidbody.position + moveDistance);

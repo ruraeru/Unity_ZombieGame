@@ -5,7 +5,10 @@ public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f; // 앞뒤 움직임의 속도
     public float sprintMultiplier = 1.5f; // 달리기 배율 (추가)
+    public float jumpForce = 7f; // 점프 힘
+
     private float comboMultiplier = 1f; // 콤보 배율 저장용
+    private bool isGrounded; // 바닥에 닿아 있는지 여부
 
     private PlayerInput playerInput; // 플레이어 입력을 알려주는 컴포넌트
     private Rigidbody playerRigidbody; // 플레이어 캐릭터의 리지드바디
@@ -34,6 +37,37 @@ public class PlayerMovement : MonoBehaviour
             GameManager.instance.onComboChanged -= HandleComboBuff;
             GameManager.instance.onComboReset -= ResetBuff;
         }
+    }
+
+    // 매 프레임 입력 확인
+    private void Update()
+    {
+        // 점프 시도 (바닥에 닿아 있을 때만 1단 점프 허용)
+        if (playerInput.Jump && isGrounded)
+        {
+            Jump();
+        }
+    }
+
+    // 점프 처리
+    private void Jump()
+    {
+        // 위쪽 방향으로 힘 가하기
+        playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        isGrounded = false; // 점프하는 순간 공중 상태로 변경
+    }
+
+    // 충돌 유지 중일 때 (바닥에 닿아 있을 때)
+    private void OnCollisionStay(Collision collision)
+    {
+        // 어떤 물체든 닿아 있으면 바닥으로 간주 (복잡한 레이어 설정 생략)
+        isGrounded = true;
+    }
+
+    // 충돌에서 벗어날 때
+    private void OnCollisionExit(Collision collision)
+    {
+        isGrounded = false;
     }
 
     // 콤보에 따른 버프 처리

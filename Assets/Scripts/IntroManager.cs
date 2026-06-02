@@ -18,4 +18,9 @@ public class IntroManager : MonoBehaviour
     {
         SceneManager.LoadScene("Intro");
     }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 }

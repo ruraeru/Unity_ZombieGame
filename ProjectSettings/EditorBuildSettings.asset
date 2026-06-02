@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Main.unity
     guid: 2f5e298ab7ef2114581ff67776aaaee2
   - enabled: 1
+    path: Assets/ZRNAssets/005030_06196_1_1/Scenes/Fukuoka_map.unity
+    guid: a7a36372eda90354bab64bfd88136aad
+  - enabled: 1
     path: Assets/Scenes/Ending.unity
     guid: 0597d4ae89cfa48daa716201b435ab34
   m_configObjects: {}

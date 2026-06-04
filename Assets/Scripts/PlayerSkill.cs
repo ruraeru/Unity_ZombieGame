@@ -53,19 +53,20 @@ public class PlayerSkill : MonoBehaviour
         {
             // 새로운 이펙트 복사본 생성 (바닥에 묻히지 않게 높이를 1.0f로 상향)
             ParticleSystem effectInstance = Instantiate(shockwaveEffect, transform.position + Vector3.up * 1.0f, Quaternion.identity);
-            
+
             // 모든 카메라가 볼 수 있는 Default 레이어로 강제 설정
-            effectInstance.gameObject.layer = 0; 
-            
+            effectInstance.gameObject.layer = 0;
+
             effectInstance.gameObject.SetActive(true);
             effectInstance.Play();
-            
+
             Destroy(effectInstance.gameObject, 2f);
         }
 
         // 소리 효과 재생
         if (shockwaveSound != null)
         {
+            audioSource.volume = 2;
             audioSource.PlayOneShot(shockwaveSound);
         }
 
@@ -83,7 +84,7 @@ public class PlayerSkill : MonoBehaviour
 
                 // 데미지 입히기
                 zombie.OnDamage(shockwaveDamage, zombie.transform.position, -knockbackDir);
-                
+
                 // 넉백 적용
                 zombie.ApplyKnockback(knockbackDir, knockbackForce);
             }

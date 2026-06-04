@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Ending.unity
     guid: 0597d4ae89cfa48daa716201b435ab34
+  - enabled: 1
+    path: Assets/Scenes/UnLimit.unity
+    guid: 9d8aa1368129a480cb13323313106b8c
   m_configObjects: {}
